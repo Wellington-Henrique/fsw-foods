@@ -6,6 +6,7 @@ import { Button } from "./_components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { db } from "./_lib/prima";
 import PromoBanner from "./_components/promo-banner";
+import RestaurantList from "./_components/restaurant-list";
 
 const Home = async () => {
   const products = await db.product.findMany({
@@ -63,6 +64,21 @@ const Home = async () => {
           src="/promo-banner-02.png"
           alt="A partir de R$ 19,90 em lanches!"
         />
+      </div>
+
+      <div className="space-y-3 py-6">
+        <div className="flex items-center justify-between px-5">
+          <h2 className="font-semibold">Pedidos Recomendados</h2>
+          <Button
+            className="h-fit p-0 text-primary hover:bg-transparent"
+            variant="ghost"
+          >
+            Ver todos
+            <ChevronRight size={16} />
+          </Button>
+        </div>
+
+        <RestaurantList />
       </div>
     </>
   );
