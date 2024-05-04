@@ -1,6 +1,6 @@
 import DeliveryInfo from "@/app/_components/delivery-info";
 import ProductList from "@/app/_components/product-list";
-import { db } from "@/app/_lib/prima";
+import { db } from "@/app/_lib/prisma";
 import RestaurantImage from "@/app/restaurants/_components/restaurant-image";
 import { StarIcon } from "lucide-react";
 import Image from "next/image";

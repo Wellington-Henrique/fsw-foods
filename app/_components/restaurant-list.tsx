@@ -1,4 +1,4 @@
-import { db } from "../_lib/prima";
+import { db } from "../_lib/prisma";
 import RestaurantItem from "./restaurant-item";
 
 const RestaurantList = async () => {

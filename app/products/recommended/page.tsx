@@ -1,6 +1,6 @@
 import Header from "@/app/_components/header";
 import ProductItem from "@/app/_components/product-item";
-import { db } from "@/app/_lib/prima";
+import { db } from "@/app/_lib/prisma";
 
 const RecommendedProductsPage = async () => {
   const products = await db.product.findMany({
