@@ -38,6 +38,7 @@ const ProductDetails = ({
   const [quantity, setQuantity] = useState(1);
 
   const handleIncreaseQuantity = () => setQuantity((prev) => prev + 1);
+
   const handleDecreaseQuantity = () => {
     if (quantity === 1) return;
     setQuantity((prev) => prev - 1);
@@ -87,7 +88,7 @@ const ProductDetails = ({
             <ChevronLeftIcon />
           </Button>
 
-          <span className="w-4">{quantity}</span>
+          <span className="w-4 text-center">{quantity}</span>
 
           <Button size="icon" onClick={handleIncreaseQuantity}>
             <ChevronRightIcon />
@@ -96,7 +97,7 @@ const ProductDetails = ({
       </div>
 
       <div className="px-5">
-        <Card className="flex justify-around py-3">
+        <Card className="mt-6 flex justify-around py-3">
           <div className="flex flex-col items-center">
             <div className="flex items-center gap-1 text-muted-foreground">
               <span className="text-xs">Entrega</span>
@@ -133,6 +134,10 @@ const ProductDetails = ({
       <div className="mt-6 space-y-3">
         <h3 className="px-5 font-semibold">Sucos</h3>
         <ProductList products={complementaryProducts} />
+      </div>
+
+      <div className="mt-6 px-5">
+        <Button className="w-full font-semibold">Adicionar à sacola</Button>
       </div>
     </div>
   );
