@@ -24,6 +24,9 @@ const ProductPage = async ({ params: { id } }: ProductProps) => {
       category: {
         name: "Sucos",
       },
+      restaurant: {
+        id: product?.restaurantId,
+      },
     },
     include: {
       restaurant: true,
