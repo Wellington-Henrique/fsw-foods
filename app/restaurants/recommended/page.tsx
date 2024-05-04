@@ -9,7 +9,9 @@ const RecommendedRestaurants = async () => {
     <>
       <Header />
       <div className="px-5 py-6">
-        <h2 className="mb-6text-lg font-semibold">Restaurantes Recomentados</h2>
+        <h2 className="mb-6 text-lg font-semibold">
+          Restaurantes Recomentados
+        </h2>
 
         <div className="flex flex-col gap-6">
           {restaurants.map((restaurant) => (
