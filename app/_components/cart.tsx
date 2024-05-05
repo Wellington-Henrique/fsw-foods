@@ -19,8 +19,15 @@ import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { createOrder } from "../_actions/order";
 import { OrderStatus } from "@prisma/client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-const Cart = () => {
+interface CartProps {
+  // eslint-disable-next-line no-unused-vars
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+const Cart = ({ setIsOpen }: CartProps) => {
   const { products, subtotalPrice, totalPrice, totalDiscounts, clearCart } =
     useContext(CartContext);
 
@@ -28,6 +35,7 @@ const Cart = () => {
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 
   const { data } = useSession();
+  const router = useRouter();
 
   const handleFinishOrderClick = async () => {
     if (!data?.user) return;
@@ -61,6 +69,15 @@ const Cart = () => {
       });
 
       clearCart();
+      setIsOpen(false);
+
+      toast("Pedido finalizado com sucesso!", {
+        description: "Você pode acompanhá-lo na tela dos seus pedidos.",
+        action: {
+          label: "Meus Pedidos",
+          onClick: () => router.push("/my-orders"),
+        },
+      });
     } catch (error) {
       console.error(error);
     } finally {
