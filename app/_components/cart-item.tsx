@@ -5,7 +5,7 @@ import {
   calculateProductTotalPrice,
   formatCurrency,
 } from "@/app/_helpers/price";
-import { Button } from "./button";
+import { Button } from "./ui/button";
 import { CartContext, CartProduct } from "@/app/_contexts/cart";
 
 interface CartItemProps {
@@ -69,7 +69,7 @@ const CartItem = ({ cartProduct }: CartItemProps) => {
               />
             </Button>
 
-            <span className="block w-3 text-xs">{cartProduct.quantity}</span>
+            <p className="block w-8 text-xs">{cartProduct.quantity}</p>
 
             <Button
               className="size-7"
