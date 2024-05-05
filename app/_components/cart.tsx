@@ -1,14 +1,64 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Card, CardContent } from "./ui/card";
 import { formatCurrency } from "../_helpers/price";
 import { Button } from "./ui/button";
 import { CartContext } from "../_contexts/cart";
 import CartItem from "./cart-item";
 import { Separator } from "./ui/separator";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "./ui/alert-dialog";
+import { Loader2 } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { createOrder } from "../_actions/order";
+import { OrderStatus } from "@prisma/client";
 
 const Cart = () => {
-  const { products, subtotalPrice, totalPrice, totalDiscounts } =
+  const { products, subtotalPrice, totalPrice, totalDiscounts, clearCart } =
     useContext(CartContext);
+
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+
+  const { data } = useSession();
+
+  const handleFinishOrderClick = async () => {
+    if (!data?.user) return;
+
+    const restaurant = products[0].restaurant;
+
+    try {
+      setIsSubmitLoading(true);
+
+      await createOrder({
+        subtotalPrice,
+        totalDiscounts,
+        totalPrice,
+        deliveryFee: restaurant.deliveryFee,
+        deliveryTimeMinutes: restaurant.deliveryTimeMinutes,
+        restaurant: {
+          connect: { id: restaurant.id },
+        },
+        status: OrderStatus.CONFIRMED,
+        user: {
+          connect: { id: data.user.id },
+        },
+      });
+
+      clearCart();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitLoading(false);
+    }
+  };
 
   return (
     <div className="flex h-full flex-col py-5">
@@ -57,7 +107,47 @@ const Cart = () => {
             </Card>
           </div>
 
-          <Button className="mt-6 w-full">Finalizar Pedido</Button>
+          <Button
+            className="mt-6 w-full"
+            disabled={isSubmitLoading}
+            onClick={() => setIsConfirmDialogOpen(true)}
+          >
+            Finalizar Pedido
+          </Button>
+
+          <AlertDialog
+            open={isConfirmDialogOpen}
+            onOpenChange={setIsConfirmDialogOpen}
+          >
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Deseja finalizar seu pedido?
+                </AlertDialogTitle>
+
+                <AlertDialogDescription>
+                  Ao finalizar seu pedido, você concorda com os termos e
+                  condições da nossa plataforma.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+
+              <AlertDialogFooter>
+                <AlertDialogCancel disabled={isSubmitLoading}>
+                  {isSubmitLoading && (
+                    <Loader2 className="mr-2 size-4 animate-spin" />
+                  )}
+                  Cancelar
+                </AlertDialogCancel>
+
+                <AlertDialogAction
+                  disabled={isSubmitLoading}
+                  onClick={handleFinishOrderClick}
+                >
+                  Finalizar
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </>
       ) : (
         <h2 className="text-center font-medium">Sua sacola está vazia...</h2>
